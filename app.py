@@ -245,18 +245,6 @@ def load_data():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/')
 def home():
    return render_template('home.html')
@@ -332,7 +320,7 @@ def profile():
         return redirect(url_for('login'))
 
 
-#    return render_template('profile.html')
+
 @app.route('/logout')
 def logout():
 
@@ -401,7 +389,7 @@ def like_topic(topicName):
         try:
             cursor = conn.cursor()
 
-            # Получите текущие понравившиеся темы пользователя из базы данных
+
             cursor.execute('SELECT liked_topics FROM users WHERE email = ?', (email,))
             user_data = cursor.fetchone()
 
@@ -464,10 +452,6 @@ def get_liked_topics():
             conn.close()
     else:
         return jsonify({'success': False, 'message': 'User not logged in'})
-# if __name__ == '__main__':
-#     init_db()
-#     init_password_reset_db()
-#     app.run(debug=True)
 
 if __name__ == '__main__':
     init_db()
