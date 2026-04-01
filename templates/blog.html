@@ -93,8 +93,9 @@
                         <a class="lang_fr" onclick="changeLanguage('fr')">fr</a>
                         </div>
                     </div>
-                </div>
         </nav>
+                </div>
+
     </div>
 </header>
 
@@ -346,7 +347,7 @@
                 button.classList.remove('selected');
             });
     
-            // Добавляем класс "selected" к выбранной кнопке
+
             event.target.classList.add('selected');
     
             document.getElementById(formId).style.display = 'block';
@@ -354,7 +355,7 @@
         }
         function saveFormData(formId, formData) {
         localStorage.setItem(formId + '_data', JSON.stringify(formData));
-        editFormData(formId); // Добавьте эту строку
+        editFormData(formId);
     }
     
     
@@ -371,7 +372,7 @@
                 element.style.display = 'none';
             });
     
-            // Сохраняем выбранный язык в localStorage
+
             localStorage.setItem('preferredLanguage', lang);
         }
     
@@ -423,13 +424,13 @@
             document.documentElement.scrollTop = 0;
         }
     
-        // Получаем кнопку "наверх"
+
         var toTopButton = document.getElementById('toTopBtn');
     
-        // Получаем футер
+
         var footer = document.querySelector('footer');
     
-        // Функция, которая будет проверять положение при прокрутке
+
         function handleScroll() {
             var scrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
     

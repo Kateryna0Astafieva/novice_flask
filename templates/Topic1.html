@@ -484,19 +484,18 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error while getting liked topics:', error);
     });
 
-    // Назначаем обработчик события для кнопки лайка
     var likeButtons = document.querySelectorAll('.like-button');
 
     likeButtons.forEach(function (likeButton) {
         likeButton.addEventListener('click', function () {
-            // Извлекаем значение data-topic с использованием parentNode
+
             var topicButtonsContainer = likeButton.parentNode;
             var topicName = topicButtonsContainer.getAttribute('data-topic');
             likeTopic(topicName);
         });
     });
 
-    // Проверяем localStorage при загрузке страницы и обновляем состояние кнопок
+
     likeButtons.forEach(function (likeButton) {
         var topicButtonsContainer = likeButton.parentNode;
         
@@ -537,11 +536,11 @@ function sendLikeRequest(topicName, liked) {
     .then(data => {
         if (data.success) {
             console.log(`${liked ? 'Like' : 'Unlike'} successful for topic: ${topicName}`);
-            // Обновляем интерфейс с учетом текущего состояния для каждой темы
+
             updateLikeButtons(topicName, liked);
-            // Добавляем или удаляем тему из отображаемого списка лайкнутых тем
+
             updateLikedTopicsContainer(topicName, liked);
-            // Сохраняем состояние лайка в localStorage
+
             localStorage.setItem(`likeState_${topicName}`, liked ? 'liked' : 'unliked');
         } else {
             console.error(`Failed to process ${liked ? 'like' : 'unlike'} for topic ${topicName}: ${data.message}`);
@@ -553,11 +552,11 @@ function sendLikeRequest(topicName, liked) {
 }
 
 function updateLikeButtons(topicName, liked) {
-    // Находим элемент с нужным data-topic
+
     var likeButtonsContainer = document.querySelector(`[data-topic="${topicName}"]`);
 
     if (likeButtonsContainer) {
-        // Находим кнопки внутри контейнера
+
         var likeButton = likeButtonsContainer.querySelector('.like-button');
         var unlikeButton = likeButtonsContainer.querySelector('.unlike-button');
 
@@ -591,7 +590,6 @@ function updateLikedTopicsContainer(topicName, liked) {
     }
 }
 
-// Проверяем localStorage при загрузке страницы и обновляем состояние кнопок
 document.addEventListener('DOMContentLoaded', function () {
     var likeButtons = document.querySelectorAll('.like-button');
 
@@ -624,7 +622,7 @@ function checkAllAnswers() {
             checkAnswers2();
             document.getElementById("resultContainer").innerHTML = `Correct Answers: ${correctCount}`;
         } else {
-            // Если пользователь не аутентифицирован, покажем уведомление
+
             showNotification("Please log in to check answers.");
         }
     });
@@ -639,26 +637,23 @@ function showNotification(message) {
 
         notificationContainer.style.display = "block";
 
-        // Можно изменить текст уведомления по вашему усмотрению
 
-
-        // Устанавливаем время отображения уведомления в миллисекундах (в данном случае, 30 секунд)
         var displayTime = 10000;
 
-        // Устанавливаем интервал обновления полосы прогресса
-        var interval = 100; // каждые 100 миллисекунд
+
+        var interval = 100;
 
         var progress = 0;
 
-        // Обновляем полосу прогресса каждые interval миллисекунд
+
         var progressInterval = setInterval(function() {
             progress += (interval / displayTime) * 100;
             progressBar.style.width = progress + "%";
 
-            // Когда полоса прогресса достигнет 100%, закрываем уведомление
+
             if (progress >= 100) {
                 closeNotification();
-                clearInterval(progressInterval); // Останавливаем интервал
+                clearInterval(progressInterval);
             }
         }, interval);
     }

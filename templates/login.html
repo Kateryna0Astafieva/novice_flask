@@ -176,11 +176,11 @@
             element.style.display = 'none';
         });
 
-        // Сохраняем выбранный язык в localStorage
+
         localStorage.setItem('preferredLanguage', lang);
     }
 
-    // Проверяем localStorage при загрузке страницы
+
     document.addEventListener('DOMContentLoaded', function () {
         var preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
         changeLanguage(preferredLanguage);

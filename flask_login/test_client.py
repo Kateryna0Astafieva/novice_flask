@@ -2,10 +2,6 @@ from flask.testing import FlaskClient
 
 
 class FlaskLoginClient(FlaskClient):
-    """
-    A Flask test client that knows how to log in users
-    using the Flask-Login extension.
-    """
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)

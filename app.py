@@ -15,16 +15,16 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 
 app.secret_key = 'novice_project'
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  #  почтовый сервер
-app.config['MAIL_PORT'] = 587  # Порт почтового сервера (
-app.config['MAIL_USERNAME'] = 'novice.IT.site@gmail.com'  #  email
-app.config['MAIL_PASSWORD'] = 'noviceIT2023'  # Пароль 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'novice.IT.site@gmail.com'
+app.config['MAIL_PASSWORD'] = 'noviceIT2023'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
 app.config['SESSION_TYPE'] = 'filesystem'
 mail = Mail(app)
-# Функция для создания подключения к базе данных
+
 def get_db_connection():
     conn = sqlite3.connect('users.db')
     conn.row_factory = sqlite3.Row
@@ -38,7 +38,6 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Создаем таблицу users, если ее нет
     cursor.execute('''
        CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,10 +72,8 @@ def load_user(user_id):
 def get_user_by_email(email):
     conn = get_db_connection()
     cursor = conn.cursor()
-
     cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
     user_data = cursor.fetchone()
-
     conn.close()
 
     if user_data:
@@ -89,10 +86,8 @@ def get_user_by_email(email):
 def get_user_by_id(user_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-
     cursor.execute('SELECT * FROM users WHERE unique_id = ?', (user_id,))
     user_data = cursor.fetchone()
-
     conn.close()
 
     if user_data:
@@ -114,12 +109,12 @@ def clear_session():
 
 @app.route('/check-auth', methods=['GET'])
 def check_authentication():
-    isAuthenticated = 'email' in session  # Предполагаем, что аутентификация происходит через сессии
+    isAuthenticated = 'email' in session
     return jsonify({'isAuthenticated': isAuthenticated})
 
 
 
-# Регистрация пользователя
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -140,8 +135,7 @@ def register():
                (username, email, hashed_password, unique_id, remember_token))
         
                     
-        #cursor.execute('INSERT INTO users (username, email, password, unique_id) VALUES (?, ?, ?, ?)',
-        #               (username, email, hashed_password, unique_id))
+
         conn.commit()
         conn.close()
         session['email'] = email
@@ -262,12 +256,12 @@ def load_data():
 
 
 
-# Домашняя страница
+
 @app.route('/')
 def home():
    return render_template('home.html')
 
-# Страница панели управления
+
 @app.route('/dashboard')
 def dashboard():
     if 'email' in session:
@@ -299,17 +293,17 @@ def forgot_password():
         user = cursor.fetchone()
         
         if user:
-            # Генерация токена сброса пароля
+
             token = secrets.token_urlsafe(20)
             
-            # Сохранение токена в базе данных
+
             cursor.execute('INSERT INTO password_reset (email, token) VALUES (?, ?)', (email, token))
             conn.commit()
             
-            # Генерация URL для сброса пароля
+
             password_reset_link = url_for("reset_password", token=token, _external=True)
             
-            # Отправка email для сброса пароля
+
             msg = Message('Password Reset Request', sender='novice.IT.site@gmail.com', recipients=[email])
             msg.html = render_template('reset_password_email.html', password_reset_link=password_reset_link)
             mail.send(msg)
@@ -341,11 +335,11 @@ def profile():
 #    return render_template('profile.html')
 @app.route('/logout')
 def logout():
-    # Проверка, если 'email' находится в сессии, удалите его
+
     if 'email' in session:
         session.pop('email', None)
     
-    # После выхода пользователя перенаправьте его на главную страницу или страницу входа
+
     return redirect(url_for('home'))
 
 @app.route('/Topics')
@@ -416,7 +410,7 @@ def like_topic(topicName):
 
             liked_topics = set(user_data['liked_topics'].split(',') if user_data['liked_topics'] else [])
 
-            # Инвертируем состояние лайка
+
             if topicName in liked_topics:
                 liked_topics.remove(topicName)
                 message = f'Topic {topicName} unliked'
@@ -424,7 +418,7 @@ def like_topic(topicName):
                 liked_topics.add(topicName)
                 message = f'Topic {topicName} liked'
 
-            # Обновите запись в базе данных
+
             cursor.execute('UPDATE users SET liked_topics = ? WHERE email = ?', (','.join(map(str, liked_topics)), email))
             conn.commit()
 
@@ -445,7 +439,7 @@ def like_topic(topicName):
 def get_liked_topics():
     if 'email' in session:
         try:
-            # Получение данных о понравившихся темах пользователя из базы данных
+
             conn = get_db_connection()
             cursor = conn.cursor()
 
@@ -456,10 +450,10 @@ def get_liked_topics():
             if user_data and 'liked_topics' in user_data:
                 liked_topics = user_data['liked_topics'].split(',') if user_data['liked_topics'] else []
                 print(f"Liked topics for {email}: {liked_topics}")  
-                # Вывод данных в консоль для отладки
+
                 return jsonify({'success': True, 'liked_topics': liked_topics})
             else:
-                # Если у пользователя нет данных о понравившихся темах, вернем пустой массив
+
                 return jsonify({'success': True, 'liked_topics': []})
 
         except Exception as e:
@@ -470,7 +464,13 @@ def get_liked_topics():
             conn.close()
     else:
         return jsonify({'success': False, 'message': 'User not logged in'})
+# if __name__ == '__main__':
+#     init_db()
+#     init_password_reset_db()
+#     app.run(debug=True)
+
 if __name__ == '__main__':
     init_db()
     init_password_reset_db()
-    app.run(debug=True)
+
+    app.run(debug=True, port=5001)
